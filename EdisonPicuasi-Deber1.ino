@@ -1,5 +1,6 @@
 //Edison Picuasi
 //Deber 1 - Juego de LEDS
+
 int leds [8]={13,12,11,10,9,8,7,6}; //pines de leds
 int i=0; //variable de incremento
 int j=0;  //variable de incremento
