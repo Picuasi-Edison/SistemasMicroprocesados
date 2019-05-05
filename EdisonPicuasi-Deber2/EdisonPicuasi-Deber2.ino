@@ -1,5 +1,6 @@
 //Edison Picuasi
 //Deber 2
+//Suma de numeros, valores de incremento accionadas por botones 1 y 2, boton 3 realiza la operacion de suma
 
 int bt1=7;  //pin boton 1
 int bt2=6;  //pin boton 2
@@ -13,6 +14,7 @@ int uni=8;  //pin salida display
 int cont1=0,cont2=0,cont3=0;  //varaibles de conteo
 int decenas=0;  //variable de almacenamiento
 int unidades=0; //variable de almacenamiento
+
 void setup() {
 Serial.begin(9600);
 pinMode(bt1,INPUT); //Configuracion de pin
