@@ -1,91 +1,85 @@
 //Edison Picuasi
 //Deber 2
 
-int bt1=7;
-int bt2=6;
-int bt3=5;
-int A=13;
-int B=12;
-int C=11;
-int D=10;
-int dec=9;
-int uni=8;
-int cont1=0,cont2=0,cont3=0;
-int on=0;
-int decenas=0;
-int unidades=0;
+int bt1=7;  //pin boton 1
+int bt2=6;  //pin boton 2
+int bt3=5;  //pin boton 3
+int A=13; //pin salida display
+int B=12; //pin salida display
+int C=11; //pin salida display
+int D=10; //pin salida display
+int dec=9;  //pin salida display
+int uni=8;  //pin salida display
+int cont1=0,cont2=0,cont3=0;  //varaibles de conteo
+int decenas=0;  //variable de almacenamiento
+int unidades=0; //variable de almacenamiento
 void setup() {
 Serial.begin(9600);
-pinMode(bt1,INPUT);
-pinMode(bt2,INPUT);
-pinMode(bt3,INPUT);
-pinMode(A,OUTPUT);
-pinMode(B,OUTPUT);
-pinMode(C,OUTPUT);
-pinMode(D,OUTPUT);
-pinMode(dec,OUTPUT);
-pinMode(uni,OUTPUT);
+pinMode(bt1,INPUT); //Configuracion de pin
+pinMode(bt2,INPUT); //Configuracion de pin
+pinMode(bt3,INPUT); //Configuracion de pin
+pinMode(A,OUTPUT); //Configuracion de pin
+pinMode(B,OUTPUT); //Configuracion de pin
+pinMode(C,OUTPUT); //Configuracion de pin
+pinMode(D,OUTPUT); //Configuracion de pin
+pinMode(dec,OUTPUT); //Configuracion de pin
+pinMode(uni,OUTPUT); //Configuracion de pin
 }
 
 void loop() {
-if(digitalRead(bt1)==LOW){
-  //on=1-on;
-  if(cont1<25){
-    cont1++;
-    Serial.println(cont1);
+/*------ PRIMER OPERADOR ------*/
+
+if(digitalRead(bt1)==LOW){  //condicion de activacion
+  if(cont1<25){ //condicion de limiente del contador
+    cont1++;  //el contador aumenta
+    Serial.print("Contador 1: "); //Imprime mensaje por CX
+    Serial.println(cont1);  //Imprime el valor por CX
     }else{
+      cont1=0;  //reinicia la variable
+      }
       
-      cont1=0;
-      }
-decenas=cont1/10;
-unidades=cont1-decenas*10;
-digitalWrite(dec,HIGH);
-digitalWrite(uni,LOW);
-numeros(decenas);
-delay(50);
-digitalWrite(dec,LOW);
-digitalWrite(uni,HIGH);
-numeros(unidades);
-delay(50);
+decenas=cont1/10; //almacena el valor de conteo
+unidades=cont1-decenas*10;  //almacena el valor de conteo
 
-    
   }
-if(digitalRead(bt2)==LOW){
- // on=1-on;
-  if(cont2<25){
-    cont2++;
-    Serial.println(cont2);
-    }else{
-      cont2==0;
-      }
-decenas=cont2/10;
-unidades=cont2-decenas*10;
-digitalWrite(dec,HIGH);
-digitalWrite(uni,LOW);
-numeros(decenas);
-delay(80);
-digitalWrite(dec,LOW);
-digitalWrite(uni,HIGH);
-numeros(unidades);
-delay(80);
-  }
-
-if(digitalRead(bt3)==LOW){
-  cont3=cont1+cont2;  
-  }
-decenas=cont3/10;
-unidades=cont3-decenas*10;
-digitalWrite(dec,HIGH);
-digitalWrite(uni,LOW);
-numeros(decenas);
-delay(80);
-digitalWrite(dec,LOW);
-digitalWrite(uni,HIGH);
-numeros(unidades);
-delay(80);
-
-
   
+/*------ SEGUNDO OPERADOR ------*/
+  
+if(digitalRead(bt2)==LOW){  //condicion de activacion
+ 
+  if(cont2<25){ //condicion limite del contador
+    cont2++;  //el contador aumenta
+    Serial.print("Contador 2: "); //Imprime mensaje por CX
+    Serial.println(cont2);  //Imprime el valor por CX
+    }else{
+      cont2==0; //reinicia la variable
+      }
+      
+decenas=cont2/10; //almacena el valor de conteo
+unidades=cont2-decenas*10;  //almacena el valor de conteo
+
+ }
+
+/*------ SUMA ------*/
+
+if(digitalRead(bt3)==LOW){  //condicion de activacion
+  cont3=cont1+cont2;  //Almacena el valor de la suma entre los operadores 1 y 2
+  Serial.print("La suma es igual a: "); //Imprime mensaje por CX
+  Serial.println(cont3);  //Imprime el valor por CX
+  decenas=cont3/10; //almacena el valor de conteo
+  unidades=cont3-decenas*10;  //almacena el valor de conteo
+  }
+
+digitalWrite(dec,HIGH); //activa pin de decenas
+digitalWrite(uni,LOW);  //desactiva el pin de las unidades
+numeros(decenas); //llamamos al metodo
+delay(80);
+
+digitalWrite(dec,LOW);  //desactiva pin de decenas
+digitalWrite(uni,HIGH); //activa pin de unidades
+numeros(unidades);  //llamamos al metodo
+delay(80);
+
 }
 
 void numeros (int j){
