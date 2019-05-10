@@ -1,41 +1,41 @@
 //Edison Picuasi
 //Laboratorio 2
 
-int A=13;
-int B=12;
-int C=11;
-int D=10;
-int dec=9;
-int uni=8;
-int S1=7;
-int S2=6;
+int A=13; //Pin salida display
+int B=12; //Pin salida display
+int C=11; //Pin salida display
+int D=10; //Pin salida display
+int dec=9;  //Pin de control display
+int uni=8;  //Pin de control display
+int S1=7; //Pin entrada sensor 1
+int S2=6; //Pin entrada sensor 2
 
-int ledV=5;
-int ledR=4;
+int ledV=5; //pin salida led
+int ledR=4; //pin salida led
 
-int decenas=0;
-int unidades=0;
-int cont1=0;
-int cont2=0;
-int ver1;
-int ver2;
-int pos[3];
-int i=0;
+int decenas=0;  //variable de almacenaje
+int unidades=0; //variable de almacenaje
+int cont1=0;  //variable almacenaje valor sensor
+int cont2=0;  //variable almacenaje valor sensor
+int ver1; //variable almacenaje
+int ver2; //variable almacenaje
+int pos[3]; //variable almacenaje
+int i=0; //variable conteo
 
-int valor=0;
+int valor=0;  //variable incremento
 
 void setup() {
 Serial.begin(9600);
-pinMode(A,OUTPUT);
-pinMode(B,OUTPUT);
-pinMode(C,OUTPUT);
-pinMode(D,OUTPUT);
-pinMode(dec,OUTPUT);
-pinMode(uni,OUTPUT);
-pinMode(S1,INPUT);
-pinMode(S2,INPUT);
-pinMode(ledV,OUTPUT);
-pinMode(ledR,OUTPUT);
+pinMode(A,OUTPUT);  //configuracion pin salida
+pinMode(B,OUTPUT);  //configuracion pin salida
+pinMode(C,OUTPUT);  //configuracion pin salida
+pinMode(D,OUTPUT);  //configuracion pin salida
+pinMode(dec,OUTPUT);  //configuracion pin salida
+pinMode(uni,OUTPUT);  //configuracion pin salida
+pinMode(S1,INPUT);  //configuracion pin entrada
+pinMode(S2,INPUT);  //configuracion pin entrada
+pinMode(ledV,OUTPUT); //configuracion salida
+pinMode(ledR,OUTPUT); //configuracion salida
 
 
 }
@@ -45,33 +45,33 @@ void loop() {
 /*----------Lectura Valor Sensores----------*/
 
 delay(50);
-cont1=digitalRead(S1);
-cont2=digitalRead(S2);
+cont1=digitalRead(S1);  //variable almacenaje del sensor
+cont2=digitalRead(S2);  //variable almacenaje del sensor
 /*----------SENSOR 1----------*/
   if(cont1==LOW){
-  delay(100);
+  //delay(100);
   Serial.print("Sensor A: ");
   Serial.println(cont1);
-  ver1=1;
-  i++;
-  pos[i]=ver1;
+  ver1=1; //almacena valor
+  i++;  //incrementa posicion
+  pos[i]=ver1;  //almacena valor en posicion i
   }
 /*----------SENSOR 2----------*/
 
   if(cont2==LOW){
-  delay(100);
+  //delay(100);
   Serial.print("Sensor B: ");
   Serial.println(cont2);
-  ver2=2;
-  i++;
-  pos[i]=ver2;
+  ver2=2; //almacena valor
+  i++;  //incrementa posicion
+  pos[i]=ver2;  //almacena valor en posicion i
   }
 /*----------Condicion de Reset Contador----------*/
 
 if(cont1==HIGH&&cont2==HIGH&&i==2){
-  i=0;
-  pos[1]=0;
-  pos[2]=0;
+  i=0;  //reinicia variable
+  pos[1]=0; //reinicia valor en la posisicon 1
+  pos[2]=0; //reinicia valor en la posisicon 1
   }  
   Serial.print("POSICION ");
   Serial.println(i);
@@ -82,11 +82,11 @@ if(cont1==HIGH&&cont2==HIGH&&i==2){
 if (pos[1]==1&&pos[2]==2){
 
   Serial.println("Persona Entra");
-  digitalWrite(ledV,HIGH);
+  digitalWrite(ledV,HIGH); //variable ledV enciende
   delay(80);
-  digitalWrite(ledV,LOW);
+  digitalWrite(ledV,LOW); //variable ledV apaga
   delay(80);
-  valor++;
+  valor++;  //incrementa variable
   decenas=valor/10; //almacena el valor de conteo
   unidades=(valor-decenas*10);  //almacena el valor de conteo
   }
@@ -95,11 +95,11 @@ if (pos[1]==1&&pos[2]==2){
   if (pos[1]==2&&pos[2]==1){
  
   Serial.println("Persona Sale");
-  digitalWrite(ledR,HIGH);
+  digitalWrite(ledR,HIGH);  //variable ledR enciende
   delay(80);
-  digitalWrite(ledR,LOW);
+  digitalWrite(ledR,LOW); //varible ledR apaga
   delay(80);
-  valor--;
+  valor--;  //disminuye variable
   decenas=valor/10; //almacena el valor de conteo
   unidades=(valor-decenas*10);  //almacena el valor de conteo
   }
