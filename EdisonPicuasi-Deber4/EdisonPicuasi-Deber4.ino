@@ -5,65 +5,64 @@
 //  2. Registro de 4 digitos  
 //  3. no contenga numeros en la parte de letras
 
-char placa [8];
-String ver;
-String letras, numeros;
-int tam,taml,tamn;
-int sec1=0,sec2=0,sec3=0;
+String ver; //variable almacenamiento ingreso serial
+String letras, numeros; //variable de separacion substring
+int tam,taml,tamn;  //variable de almacenamiento extension de substring
+int sec1=0,sec2=0,sec3=0; //variable de incremento
 
 void setup() {
-Serial.begin(9600);
-Serial.println("Ingrese la placa vehicular:");
-Serial.println("Ejemplo: ABC-1234 ");
+Serial.begin(9600); //inicializa Serial
+Serial.println("Ingrese la placa vehicular:");  //Mensaje CX
+Serial.println("Ejemplo: ABC-1234 "); //Mensaje CX
 }
 
 void loop() {
+//condicion de datos en CX
 if(Serial.available()>0){
-  ver=Serial.readString();
-  tam=ver.length();
+  ver=Serial.readString();  //almacena los datos
+  tam=ver.length(); //determina el tamano
 
-  char vector[tam];
-  ver.toCharArray(vector,tam);
+  char vector[tam]; //vector con el tamano de la cadena anterior
+  ver.toCharArray(vector,tam);  //cambia de tipo
 
 /*--------NO TENGA NUMEROS--------*/
 
-letras=ver.substring(0,ver.indexOf('-'));
-taml=letras.length()+1;
-  char vecl[taml];
+letras=ver.substring(0,ver.indexOf('-')); //extrae los datos
+taml=letras.length()+1; //determina el tamno
+  char vecl[taml]; //crea un vector con el tamano determinado anteriormente
   letras.toCharArray(vecl,taml);
   
 //Comprueba cada celda si corresponde a una letra
 
 for (int i=0;i<3;i++){
 switch(vecl[i]){
-  case 'A'...'Z':
-  sec1++;
+  case 'A'...'Z': //determina que el vector sea solo letras
+  sec1++; //incrementa 
   //Serial.println(sec1);
   break;
   }
   
 }//sec1=0;
-
   
 /*--------REGISTRO 4 DIGITOS--------*/
 
-numeros=ver.substring(ver.indexOf('-')+1,ver.length());
-tamn=numeros.length()+1;
-char vecn[tamn];
-  numeros.toCharArray(vecn,tamn);
+numeros=ver.substring(ver.indexOf('-')+1,ver.length()); //extrae datos
+tamn=numeros.length()+1;  //determina el tamano
+char vecn[tamn];  //crea un nuevo vector
+  numeros.toCharArray(vecn,tamn); //cambia de tipo
 for(int j=0;j<4;j++){
   
-  switch(vecn[j]){
-  case '0'...'9':
-  sec2++;
+  switch(vecn[j]){  
+  case '0'...'9': //determina que los caracteres sean solo numeros
+  sec2++;  //variable aumenta
   //Serial.println(sec2);
   break;
   }
-  sec3=sec1+sec2;
+  sec3=sec1+sec2;  //almacena la sumatoria
   //Serial.println(sec3);
-  if(sec3==7){
-    Serial.println("");
-    Serial.println("Ingreso Correcto");
+  if(sec3==7){  //condicion de ingreso
+    Serial.println(""); //mensaje CX
+    Serial.println("Ingreso Correcto"); //mensaje CX
 
 /*--------PROVINCIAS--------*/
 switch (vector[0]){
