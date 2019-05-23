@@ -10,6 +10,10 @@ int A=13;
 int B=12;
 int C=11;
 int D=10;
+int dec=9;
+int uni=8;
+int unidades=0;
+int decenas=0;
 int cont,cont2;
 int on1,on2,on3,on4,on5;
 void setup() {
@@ -20,9 +24,11 @@ void setup() {
   pass5=String("FE56");
   Serial.begin(9600);
   pinMode(A,OUTPUT);
+  pinMode(B,OUTPUT);
   pinMode(C,OUTPUT);
   pinMode(D,OUTPUT);
-  pinMode(D,OUTPUT);
+  pinMode(dec,OUTPUT);
+  pinMode(uni,OUTPUT);
   Serial.println("Contador de personas mediante CX");
   Serial.println("Ingrese la Contrasena:");
   Serial.println("Ejemplo: AB01");
@@ -37,104 +43,191 @@ if(Serial.available()>0){
   CX.toCharArray(validar,tam);
 /*------------Password 1------------*/
   if(CX.equals(pass1)){
-    Serial.print("CORRECTO"); 
     on1++;
     if(on1==1){
-    cont++;
     if(validar[0]=='A'){
       cont2++;
       }
       }
     if(on1==2){
-      cont--;
       if(validar[0]=='A'){
       cont2--;
       }
+      on1=3;
       }
-     //Serial.println(cont2); 
+      if(on1==3){
+        on1=0;
+        
+        }
   }
 
 /*------------Password 2------------*/
   if(CX.equals(pass2)){
-    Serial.print("CORRECTO");
     on2++;
     if(on2==1){
-    cont++;
     if(validar[0]=='A'){
       cont2++;
       }
       }
     if(on2==2){
-      cont--;
       if(validar[0]=='A'){
       cont2--;
       }
+      on2=3;
       }
+      if(on2==3){
+        
+        on2=0;
+        
+        }
      //Serial.println(cont2);
   }
 /*------------Password 3------------*/
   if(CX.equals(pass3)){
-    Serial.print("CORRECTO");
     on3++;
     if(on3==1){
-    cont++;
     if(validar[0]=='A'){
       cont2++;
       }
       }
     if(on3==2){
-      cont--;
       if(validar[0]=='A'){
       cont2--;
       }
+      on3=3;
       }
+      if(on3==3){
+        
+        on3=0;
+        }
      //Serial.println(cont2);
   }
 /*------------Password 4------------*/
   if(CX.equals(pass4)){
-    Serial.print("CORRECTO");
     on4++;
     if(on4==1){
-    cont++;
     if(validar[0]=='F'){
       cont2=cont2+2;
       }
       }
     if(on4==2){
-      cont--;
       if(validar[0]=='F'){
       cont2=cont2-2;
       }
+      on4=3;
       }
+      if(on4==3){
+        
+        on4=0;
+        }
      //Serial.println(cont2);
   }
 /*------------Password 5------------*/
   if(CX.equals(pass5)){
-    Serial.print("CORRECTO");
     on5++;
     if(on5==1){
-    cont++;
     if(validar[0]=='F'){
       cont2=cont2+2;
       }
       }
     if(on5==2){
-      cont--;
       if(validar[0]=='F'){
       cont2=cont2-2;
       }
+      on5=3;
       }
+      if(on5==3){
+        
+        on5=0;
+        }
      //Serial.println(cont2);
       }
-delay(200);
-      if(CX!=pass1||CX!=pass2||CX!=pass3||CX!=pass4||CX!=pass5){
+Serial.println(cont);
+if(CX.equals(pass1)||CX.equals(pass2)||CX.equals(pass3)||CX.equals(pass4)||CX.equals(pass5)){
+  Serial.println("");  
+  Serial.println("CORRECTO");
+  
+  }else{
+    Serial.println("");
     Serial.println("INCORRECTO");
-    }else{
-      
-      Serial.println("CORRECTO");
-      }
+    }
+     decenas=(cont2/10);
+     unidades=cont2-decenas*10;
   }
 
-  
- 
+
+digitalWrite(dec,HIGH); //activa pin de decenas
+digitalWrite(uni,LOW);  //desactiva el pin de las unidades
+numeros(decenas); //llamamos al metodo
+delay(80);
+
+digitalWrite(dec,LOW);  //desactiva pin de decenas
+digitalWrite(uni,HIGH); //activa pin de unidades
+numeros(unidades);  //llamamos al metodo
+delay(80);
+}
+
+void numeros(int j){
+  switch(j){
+    case 0:
+    digitalWrite(A,LOW);
+    digitalWrite(B,LOW);
+    digitalWrite(C,LOW);
+    digitalWrite(D,LOW);
+    break;
+    case 1:
+    digitalWrite(A,HIGH);
+    digitalWrite(B,LOW);
+    digitalWrite(C,LOW);
+    digitalWrite(D,LOW);
+    break;
+    case 2:
+    digitalWrite(A,LOW);
+    digitalWrite(B,HIGH);
+    digitalWrite(C,LOW);
+    digitalWrite(D,LOW);
+    break;
+    case 3:
+    digitalWrite(A,HIGH);
+    digitalWrite(B,HIGH);
+    digitalWrite(C,LOW);
+    digitalWrite(D,LOW);
+    break;
+    case 4:
+    digitalWrite(A,LOW);
+    digitalWrite(B,LOW);
+    digitalWrite(C,HIGH);
+    digitalWrite(D,LOW);
+    break;
+    case 5:
+    digitalWrite(A,HIGH);
+    digitalWrite(B,LOW);
+    digitalWrite(C,HIGH);
+    digitalWrite(D,LOW);
+    break;
+    case 6:
+    digitalWrite(A,LOW);
+    digitalWrite(B,HIGH);
+    digitalWrite(C,HIGH);
+    digitalWrite(D,LOW);
+    break;
+    case 7:
+    digitalWrite(A,HIGH);
+    digitalWrite(B,HIGH);
+    digitalWrite(C,HIGH);
+    digitalWrite(D,LOW);
+    break;
+    case 8:
+    digitalWrite(A,LOW);
+    digitalWrite(B,LOW);
+    digitalWrite(C,LOW);
+    digitalWrite(D,HIGH);
+    break;
+    case 9:
+    digitalWrite(A,HIGH);
+    digitalWrite(B,LOW);
+    digitalWrite(C,LOW);
+    digitalWrite(D,HIGH);
+    break;
+    }
 }
