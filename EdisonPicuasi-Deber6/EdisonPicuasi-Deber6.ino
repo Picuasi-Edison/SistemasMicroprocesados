@@ -32,7 +32,7 @@ lcd.begin(16,2);  //inicializa lcd
 segundo=EEPROM.read(0); //lea dato en la celda 0 de la memoria EEPROM
 minuto=EEPROM.read(1);  //lea dato en la celda 1 de la memoria EEPROM
 hora=EEPROM.read(2);  //lea dato en la celda 2 de la memoria EEPROM
-Timer1.initialize(10000); //inicializa y configura el timer 1
+Timer1.initialize(1000000); //inicializa y configura el timer a 1 segundo
 Timer1.attachInterrupt(reloj);  //configura la interrupcion del timer
 
 }
@@ -78,73 +78,73 @@ if(hora<6){ //comprueba si la variable es menor a 6
 }
 
 void reloj(){
-  if(segundo<59){
-    segundo++;
+  if(segundo<59){ //comprueba el valor
+    segundo++;  //incrementa valor
   }else{
-    segundo=0;
-    if(minuto<59){
-      minuto++;
-      EEPROM.update(1,minuto);
+    segundo=0;  //inicialia en cero
+    if(minuto<59){  //comprueba el valor
+      minuto++; //incrementa valor
+      EEPROM.update(1,minuto);  //alamacena en EEPROM
     }else{
-      EEPROM.update(1,minuto);
-      minuto=0;
-      if(hora<24){
-      hora++;
-      EEPROM.update(2,hora);
+      EEPROM.update(1,minuto);  //alamacena en EEPROM
+      minuto=0; //inicialia en cero
+      if(hora<24){  //comprueba el valor
+      hora++; //incrementa valor
+      EEPROM.update(2,hora);  //alamacena en EEPROM
       }else{ 
-        EEPROM.update(2,hora); 
-        hora=0;
+        EEPROM.update(2,hora); //alamacena en EEPROM
+        hora=0; //inicialia en cero
         }
       }
     }
-  if(segundo<10){
-    lcd.clear();
-    lcd.setCursor(9,0);
-    lcd.print(':');
-    lcd.setCursor(10,0);
-    lcd.print('0');
-    lcd.setCursor(11,0);
-    lcd.print(segundo);
-    lcd.setCursor(0,1);
-    lcd.print(msg);
+  if(segundo<10){ //comprueba el valor
+    lcd.clear();  //limpia el lcd
+    lcd.setCursor(9,0); //posiciona el cursor
+    lcd.print(':'); //Imprime mensaje
+    lcd.setCursor(10,0);  //posiciona el cursor
+    lcd.print('0'); //Imprime mensaje
+    lcd.setCursor(11,0);  //posiciona el cursor
+    lcd.print(segundo); //Imprime mensaje
+    lcd.setCursor(0,1); //posiciona el cursor
+    lcd.print(msg); //Imprime mensaje
     }else{
-      lcd.clear();
-      lcd.setCursor(9,0);
-      lcd.print(':');
-      lcd.setCursor(10,0);
-      lcd.print(segundo);
-      lcd.setCursor(0,1);
-      lcd.print(msg);
+      lcd.clear();  //limpia el lcd
+      lcd.setCursor(9,0); //posiciona el cursor
+      lcd.print(':'); //Imprime mensaje
+      lcd.setCursor(10,0);  //posiciona el cursor
+      lcd.print(segundo); //Imprime mensaje
+      lcd.setCursor(0,1); //posiciona el cursor
+      lcd.print(msg); //Imprime mensaje
       
       }
-   if(minuto<10){
-    lcd.setCursor(6,0);
-    lcd.print(':');
-    lcd.setCursor(7,0);
-    lcd.print('0');
-    lcd.setCursor(8,0);
-    lcd.print(minuto);
-    lcd.setCursor(0,1);
-    lcd.print(msg);
+   if(minuto<10){ //comprueba el valor
+    lcd.setCursor(6,0); //posiciona el cursor
+    lcd.print(':'); //Imprime mensaje
+    lcd.setCursor(7,0); //posiciona el cursor
+    lcd.print('0'); //Imprime mensaje
+    lcd.setCursor(8,0); //posiciona el cursor
+    lcd.print(minuto);  //Imprime mensaje
+    lcd.setCursor(0,1); //posiciona el cursor
+    lcd.print(msg); //Imprime mensaje
     }else{
-      lcd.setCursor(6,0);
-      lcd.print(':');
-      lcd.setCursor(7,0);
-      lcd.print(minuto);
-      lcd.setCursor(0,1);
-      lcd.print(msg);
+      lcd.setCursor(6,0); //posiciona el cursor
+      lcd.print(':'); //Imprime mensaje
+      lcd.setCursor(7,0); //posiciona el cursor
+      lcd.print(minuto);  //Imprime mensaje
+      lcd.setCursor(0,1); //posiciona el cursor
+      lcd.print(msg); //Imprime mensaje
       }
-    if(hora<10){
-    lcd.setCursor(4,0);
-    lcd.print('0');
-    lcd.setCursor(5,0);
-    lcd.print(hora);
-    lcd.setCursor(0,1);
-    lcd.print(msg);
+    if(hora<10){  //comprueba el valor
+    lcd.setCursor(4,0); //posiciona el cursor
+    lcd.print('0'); //Imprime mensaje
+    lcd.setCursor(5,0); //posiciona el cursor
+    lcd.print(hora);  //Imprime mensaje
+    lcd.setCursor(0,1); //posiciona el cursor
+    lcd.print(msg); //Imprime mensaje
     }else{
-      lcd.setCursor(4,0);
-      lcd.print(hora);
-      lcd.setCursor(0,1);
-      lcd.print(msg);
+      lcd.setCursor(4,0); //posiciona el cursor
+      lcd.print(hora);  //Imprime mensaje
+      lcd.setCursor(0,1); //posiciona el cursor
+      lcd.print(msg); //Imprime mensaje
       }
 }
