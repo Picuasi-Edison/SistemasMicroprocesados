@@ -62,6 +62,25 @@ void setup() {
     }
   */
 
+  //Reloj almacenada en EEPROM
+
+    //EEPROM.write(1,50);  //minuto
+    //EEPROM.write(2,11);  //hora
+
+  //Alarma del sistema de luces almacenada en EEPROM
+
+    //EEPROM.write(3,40);  //minuto alarma luces
+    //EEPROM.write(4,20);  //hora alarma luces
+    
+  //Contrasena almacenada en EEPROM
+  /*
+    EEPROM.write(6,1);  //password
+    EEPROM.write(7,2);  //password
+    EEPROM.write(8,3);  //password
+    EEPROM.write(9,6);  //password
+  */
+  //Dato almacenado estado de alarma
+  //EEPROM.write(5,0);  //password
   //RELOJ
   segundo = EEPROM.read(0);
   minuto = EEPROM.read(1);
@@ -73,14 +92,8 @@ void setup() {
   aestado = EEPROM.read(5);
   //Estado Luces
   alight = EEPROM.read(10);
-  //Contrasena almacenada en EEPROM
-  /*
-    EEPROM.write(6,1);
-    EEPROM.write(7,2);
-    EEPROM.write(8,3);
-    EEPROM.write(9,6);
-  */
-  Timer1.initialize(10000000);
+
+  Timer1.initialize(1000000);
   Timer1.attachInterrupt(reloj);
   MsTimer2::set(1000,temporizador);
   Serial.print("Alarma hora: ");
@@ -138,8 +151,7 @@ void loop() {
   }
 
   if (opcion == 5) {
-      lcd.setCursor(0,0);
-      lcd.print("Enter OLD Pass");
+      
     if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
         customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
       customKey = customKey - 48;
@@ -206,7 +218,7 @@ void loop() {
   //////////////////////////Sistema de Seguridad///////////////////////////////
   //Seleccion de sensores
   if (opcion == 2) {
-    if (digitalRead(46) == LOW || digitalRead(45) == LOW || digitalRead(44) == LOW || digitalRead(43) == LOW) {
+    if (digitalRead(46) == HIGH || digitalRead(45) == HIGH || digitalRead(44) == HIGH || digitalRead(43) == HIGH) {
       Serial.println("Uno o mas sensores no esta activado");
       delay(200);
     } else {
@@ -216,7 +228,7 @@ void loop() {
     }
   }
   if (EEPROM.read(5)==1) {
-    if (digitalRead(46) == LOW || digitalRead(45) == LOW || digitalRead(44) == LOW || digitalRead(43) == LOW) {
+    if (digitalRead(46) == HIGH || digitalRead(45) == HIGH || digitalRead(44) == HIGH || digitalRead(43) == HIGH) {
       //Serial.println("INTRUSO");
       digitalWrite(51, HIGH);
 
@@ -267,18 +279,26 @@ void loop() {
   if(EEPROM.read(10)==1){
   if (EEPROM.read(1) == EEPROM.read(3) && EEPROM.read(2) == EEPROM.read(4)) {
     MsTimer2::start();
+    digitalWrite(50,HIGH); 
+    digitalWrite(49,HIGH);
+    digitalWrite(48,HIGH); 
+    digitalWrite(47,HIGH);
     }
+/*
   if(tminuto==2){
    digitalWrite(50,HIGH); 
    digitalWrite(49,HIGH);
+   //Serial.println("Lucessss");
     }
   if(tminuto==3){ 
    digitalWrite(48,HIGH);
+      //Serial.println("Lucessss 2222");
     }
   if(tminuto==5){
    digitalWrite(47,HIGH);
+      //Serial.println("Lucessss 333");
     }
-
+*/
   if(EEPROM.read(1)==0&&EEPROM.read(2)==0){
     
     MsTimer2::stop();
@@ -288,6 +308,7 @@ void loop() {
     digitalWrite(49,LOW);
     digitalWrite(48,LOW);
     digitalWrite(47,LOW);
+       //Serial.println("Fuera Lucessss");
     }
   
         
@@ -318,7 +339,7 @@ void reloj () {
     } else {
       minuto = 0;
       EEPROM.update(1, minuto);
-      if (hora < 24) {
+      if (hora < 23) {
         hora++;
         EEPROM.update(2, hora);
       } else {
@@ -457,6 +478,9 @@ void menu () {
       Serial.print(msg4);
       Serial.print("\t ");
       Serial.println(msg41);
+      delay(500);
+      opcion=0;
+      
       break;
   
   }
@@ -491,7 +515,7 @@ void temporizador () {
       tminuto++;
     } else {
       tminuto = 0;
-      if (thora < 24) {
+      if (thora < 23) {
         thora++;
       } else {
         thora = 0;

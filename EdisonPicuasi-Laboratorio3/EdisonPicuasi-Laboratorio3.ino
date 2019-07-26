@@ -2,7 +2,7 @@
 //Contador de personas
 
 String pass1, pass2,pass3, pass4, pass5;
-
+int b1,b2,b3,b4,b5;
 
 String CX;
 int tam;
@@ -45,22 +45,23 @@ if(Serial.available()>0){
   if(CX.equals(pass1)){
     on1++;
     if(on1==1){
-    if(validar[0]=='A'){
       cont2++;
+      b1=1;
       }
-      }
-    if(on1==2){
-      if(validar[0]=='A'){
+    if(on1==2&&b1==1){
       cont2--;
-      }
       on1=3;
       }
       if(on1==3){
-        on1=0;
+        
+        on1
+        =0;
         
         }
+     Serial.println(on1);
   }
 
+  Serial.println(b1);
 /*------------Password 2------------*/
   if(CX.equals(pass2)){
     on2++;
@@ -142,7 +143,7 @@ if(Serial.available()>0){
         }
      //Serial.println(cont2);
       }
-Serial.println(cont);
+Serial.println(cont2);
 if(CX.equals(pass1)||CX.equals(pass2)||CX.equals(pass3)||CX.equals(pass4)||CX.equals(pass5)){
   Serial.println("");  
   Serial.println("CORRECTO");

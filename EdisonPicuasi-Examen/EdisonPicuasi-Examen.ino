@@ -2,8 +2,10 @@
 
 LiquidCrystal lcd(13,12,11,10,9,8);
 String CX;
-int a1,a2;
-int posicion=0;
+String a1;
+int a2,k=0;
+int j=0;
+int posicion;
 int sumar,restar;
 int tam,dato;
 char variable=',';
@@ -23,27 +25,29 @@ tam=CX.length()+1;
 char cadena [tam];
 CX.toCharArray(cadena,tam);
 
-
-for(int j=0;j<=tam;j++){
+for(;j<=tam;j++){
  switch(cadena[j]){  
     case'0'...'1':
     break;
     case ',':
-    
-    String nueva[tam];
-    nueva[j]=CX.substring(0,CX.indexOf(','));
-    a1=nueva[j].toInt();
-    Serial.println(nueva[j]);
+k++;
+//Serial.println(k);   
+
+ int nuevo[k];
+
+ for(int p=0;p<k;p++){
+  
+  nuevo[p]=j;
+Serial.print(p);
+Serial.println(nuevo[p]);
+  
+  }
+
     break;
+
 
   }
 
-   if(cadena[j]==','){
-
-    posicion++;
-    Serial.println(posicion);
-    
-    }
 
   }
 
@@ -55,7 +59,7 @@ void suma(){
   //lcd.clear();
   lcd.setCursor(0,0);
   
-  sumar=a1+a2;
+  //sumar=a1+a2;
   lcd.print(sumar);
   }
 
@@ -64,7 +68,7 @@ void resta(){
   //lcd.clear();
   lcd.setCursor(0,1);
   
-  restar=a1+a2;
+  //restar=a1+a2;
   lcd.print(restar);
   
   

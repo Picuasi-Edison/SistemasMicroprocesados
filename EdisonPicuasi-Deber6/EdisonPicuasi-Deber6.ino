@@ -32,7 +32,7 @@ lcd.begin(16,2);  //inicializa lcd
 segundo=EEPROM.read(0); //lea dato en la celda 0 de la memoria EEPROM
 minuto=EEPROM.read(1);  //lea dato en la celda 1 de la memoria EEPROM
 hora=EEPROM.read(2);  //lea dato en la celda 2 de la memoria EEPROM
-Timer1.initialize(10000); //inicializa y configura el timer a 1 segundo
+Timer1.initialize(100); //inicializa y configura el timer a 1 segundo
 Timer1.attachInterrupt(reloj);  //configura la interrupcion del timer
 
 }
@@ -64,7 +64,7 @@ if(hora>18&&hora<24){  //comprueba y establece un limite de comparacion
   delay(100); //detiene 
   }
 }
-if(hora<6){ //comprueba si la variable es menor a 6
+if(hora<18){ //comprueba si la variable es menor a 18 
   
     digitalWrite(3,LOW);  //apaga los leds
     digitalWrite(4,LOW);  //apaga los leds
