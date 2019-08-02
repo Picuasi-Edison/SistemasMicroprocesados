@@ -45,7 +45,7 @@ byte colPins[columnas] = {25, 24, 23, 22}; //asignamos los pines para las comuna
 Keypad customKeypad = Keypad( makeKeymap(teclado), rowPins, colPins, filas, columnas);
 
 int hora, minuto, segundo;  //variables reloj
-int thora, tminuto, tsegundo;  //variables temporizador
+int tsegundo;  //variables temporizador
 int ahora, aminuto; //variables alarma
 int opcion, presion = 5, contpass = 0;
 int aestado, passestado, on;
@@ -124,26 +124,17 @@ void setup() {
   segundo = EEPROM.read(0);
   minuto = EEPROM.read(1);
   hora = EEPROM.read(2);
-  //ALARMA
+  //SENSORES
   aminuto = EEPROM.read(3);
   ahora = EEPROM.read(4);
   //Estado de la alarma
   aestado = EEPROM.read(5);
   //Estado Luces
-  alight = EEPROM.read(10);
+  alight = EEPROM.read(9);
 
   Timer1.initialize(1000000);
   Timer1.attachInterrupt(reloj);
   MsTimer2::set(1000,temporizador);
-  Serial.print("Alarma hora: ");
-  Serial.println(EEPROM.read(4));
-  Serial.print("Alarma minuto: ");
-  Serial.println(EEPROM.read(3));
-  Serial.print("Contrasena Actual: ");
-  Serial.print(EEPROM.read(6));
-  Serial.print(EEPROM.read(7));
-  Serial.print(EEPROM.read(8));
-  Serial.println(EEPROM.read(9));
 
 }
 
@@ -167,33 +158,65 @@ void loop() {
       if (verpass[0] == EEPROM.read(15) && verpass[1] == EEPROM.read(16) &&
           verpass[2] == EEPROM.read(17) && verpass[3] == EEPROM.read(18)&&
           verpass[4] == EEPROM.read(19)) {
-      Serial.println("CORREC");
+        Serial.println("CORRECTO");
+        aestado = 1 - aestado;
+        EEPROM.update(5, aestado);
+        Serial.print("alarma: ");
+        Serial.println(aestado);
         contpass = 0;
         presion = 5;
+        if(aestado==1){
+        MsTimer2::start();
+        }
+        opcion=0;
       }
 //USERONE2
       else if (verpass[0] == EEPROM.read(20) && verpass[1] == EEPROM.read(21) &&
           verpass[2] == EEPROM.read(22) && verpass[3] == EEPROM.read(23)&&
           verpass[4] == EEPROM.read(24)) {
-      Serial.println("CORREC");
+        Serial.println("CORRECTO");
+        aestado = 1 - aestado;
+        EEPROM.update(5, aestado);
+        Serial.print("alarma: ");
+        Serial.println(aestado);
         contpass = 0;
         presion = 5;
+        if(aestado==1){
+        MsTimer2::start();
+        }
+        opcion=0;
       }
 //USERTWO1
       else if (verpass[0] == EEPROM.read(25) && verpass[1] == EEPROM.read(26) &&
           verpass[2] == EEPROM.read(27) && verpass[3] == EEPROM.read(28)&&
           verpass[4] == EEPROM.read(29)) {
-      Serial.println("CORREC");
+        Serial.println("CORRECTO");
+        aestado = 1 - aestado;
+        EEPROM.update(5, aestado);
+        Serial.print("alarma: ");
+        Serial.println(aestado);
         contpass = 0;
         presion = 5;
+        if(aestado==1){
+        MsTimer2::start();
+        }
+        opcion=0;
       }
 //USERTWO2
       else if (verpass[0] == EEPROM.read(30) && verpass[1] == EEPROM.read(31) &&
           verpass[2] == EEPROM.read(32) && verpass[3] == EEPROM.read(33)&&
           verpass[4] == EEPROM.read(34)) {
-      Serial.println("CORREC");
+      Serial.println("CORRECTO");
+        aestado = 1 - aestado;
+        EEPROM.update(5, aestado);
+        Serial.print("alarma: ");
+        Serial.println(aestado);
         contpass = 0;
         presion = 5;
+        if(aestado==1){
+        MsTimer2::start();
+        }
+        opcion=0;
       }else{
         intentos=intentos-1;
         Serial.println(intentos);
@@ -202,6 +225,16 @@ void loop() {
         }     
     }
   }
+
+if(tsegundo==20){
+  MsTimer2::stop();
+  tsegundo=0;
+  EEPROM.update(9,1);
+  }
+
+  if(intentos==0){
+    opcion=5;
+    }
 
   if (opcion == 5) {
       
@@ -216,13 +249,14 @@ void loop() {
       Serial.println(customKey);
     }
 
-    if (contpass == 4) {
-      if (verpass[0] == EEPROM.read(6) && verpass[1] == EEPROM.read(7) &&
-          verpass[2] == EEPROM.read(8) && verpass[3] == EEPROM.read(9)) {
+    if (contpass == 5) {
+      if (verpass[0] == EEPROM.read(10) && verpass[1] == EEPROM.read(11) &&
+          verpass[2] == EEPROM.read(12) && verpass[3] == EEPROM.read(13)&&
+          verpass[4] == EEPROM.read(14)) {
         //lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Correcto        ");
-        Serial.println("CORRECTO");
+        Serial.println("MASTER CORRECTO");
         delay(400);
         contpass = 0;
         presion = 5;
@@ -233,7 +267,7 @@ void loop() {
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("Incorrecto      ");
-        Serial.println("INCORRECTO");
+        Serial.println("MASTER INCORRECTO");
         contpass = 0;
         presion = 5;
         passestado = 2;
@@ -243,7 +277,7 @@ void loop() {
 
   if (passestado == 1) {
         lcd.setCursor(0,0);
-        lcd.print("Enter NEW PASS");
+        lcd.print("SELECT USER");
     if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
         customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
       nkey++;
@@ -254,118 +288,33 @@ void loop() {
       lcd.print('*');
       Serial.println(customKey);
     }
-    if (nkey == 9) {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      delay(400);
-      lcd.print("PASS CHANGED");
-      msg3=String(String(EEPROM.read(2))+":"+String(EEPROM.read(1)));
-      nkey = 6;
-      passestado = 0;
-      presion=5;
-      opcion = 0;
-    }
-
   }
 
   //////////////////////////Sistema de Seguridad///////////////////////////////
-  //Seleccion de sensores
-  if (opcion == 3) {
-    if (digitalRead(46) == HIGH || digitalRead(45) == HIGH || digitalRead(44) == HIGH || digitalRead(43) == HIGH) {
-      Serial.println("Uno o mas sensores no esta activado");
-      delay(200);
-    } else {
-      
-      Serial.println("Sensores activado");
-      delay(200);
-    }
-  }
   if (EEPROM.read(5)==1) {
     if (digitalRead(46) == HIGH || digitalRead(45) == HIGH || digitalRead(44) == HIGH || digitalRead(43) == HIGH) {
-      //Serial.println("INTRUSO");
       digitalWrite(51, HIGH);
-
-      msg2=String(String(EEPROM.read(2))+":"+String(EEPROM.read(1)));
     }
   } else {
     digitalWrite(51, LOW);
-
   }
   //////////////////////////Sistema de luces///////////////////////////////////
+  if(EEPROM.read(9)==1){
+  if (EEPROM.read(1) == 30 && EEPROM.read(2) == 18) {
 
-  //Cambio de alarma hora luces
-  if (horario == 1) {
-      lcd.setCursor(0,0);
-      lcd.print("Enter NEW TIME");
-    if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' || customKey == '5' ||
-        customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
-      customKey = customKey - 48;
-      noche[ntime] = customKey; //almacena el dato ingresado en cada posicion
-      ntime++; //aumenta contador
-      presion++;
-      lcd.setCursor(presion, 1);
-      lcd.print('*');
-      Serial.println(customKey);
-    }
-
-    if (ntime == 4) {
-      int hora = (noche[0] * 10) + noche[1];
-      int minuto = (noche[2] * 10) + noche[3];
-      if (hora < 24 && minuto < 60) {
-        EEPROM.update(3, minuto);
-        EEPROM.update(4, hora);
-        Serial.println("Horario Cambiado");
-
-        msg4=String(String(EEPROM.read(4))+":"+String(EEPROM.read(3)));
-        ntime = 0;
-        horario = 0;
-        opcion = 0;
-        presion=5;
-      } else {
-        Serial.println("Ingrese una hora Valida");
-        ntime = 0;
-        presion=5;
-      }
-    }
-  }
-
-  if(EEPROM.read(10)==1){
-  if (EEPROM.read(1) == EEPROM.read(3) && EEPROM.read(2) == EEPROM.read(4)) {
-    MsTimer2::start();
     digitalWrite(50,HIGH); 
     digitalWrite(49,HIGH);
     digitalWrite(48,HIGH); 
     digitalWrite(47,HIGH);
     }
-/*
-  if(tminuto==2){
-   digitalWrite(50,HIGH); 
-   digitalWrite(49,HIGH);
-   //Serial.println("Lucessss");
-    }
-  if(tminuto==3){ 
-   digitalWrite(48,HIGH);
-      //Serial.println("Lucessss 2222");
-    }
-  if(tminuto==5){
-   digitalWrite(47,HIGH);
-      //Serial.println("Lucessss 333");
-    }
-*/
+
   if(EEPROM.read(1)==0&&EEPROM.read(2)==0){
-    MsTimer2::stop();
-    tminuto=0;
-    thora=0;
     digitalWrite(50,LOW);
     digitalWrite(49,LOW);
     digitalWrite(48,LOW);
     digitalWrite(47,LOW);
-       //Serial.println("Fuera Lucessss");
     }
   }else{
-    MsTimer2::stop();
-    tminuto=0;
-    thora=0;
     digitalWrite(50,LOW);
     digitalWrite(49,LOW);
     digitalWrite(48,LOW);
@@ -397,64 +346,10 @@ void menu () {
 
 
 void temporizador () {
-  if (tsegundo < 59) {
-    tsegundo++;
-  } else {
-    tsegundo = 0;
-    if (tminuto < 59) {
-      tminuto++;
-    } else {
-      tminuto = 0;
-      if (thora < 23) {
-        thora++;
-      } else {
-        thora = 0;
-      }
-    }
-  }
-
-if (tsegundo < 10) { //comprueba el valor
-      lcd.clear();  //limpia el lcd
-      lcd.setCursor(9, 1); //posiciona el cursor
-      lcd.print(':'); //Imprime mensaje
-      lcd.setCursor(10, 1); //posiciona el cursor
-      lcd.print('0'); //Imprime mensaje
-      lcd.setCursor(11, 1); //posiciona el cursor
-      lcd.print(tsegundo); //Imprime mensaje
-    } else {
-      lcd.clear();  //limpia el lcd
-      lcd.setCursor(9,1); //posiciona el cursor
-      lcd.print(':'); //Imprime mensaje
-      lcd.setCursor(10, 1); //posiciona el cursor
-      lcd.print(tsegundo); //Imprime mensaje
-
-    }
-    if (tminuto < 10) { //comprueba el valor
-      lcd.setCursor(6, 1); //posiciona el cursor
-      lcd.print(':'); //Imprime mensaje
-      lcd.setCursor(7, 1); //posiciona el cursor
-      lcd.print('0'); //Imprime mensaje
-      lcd.setCursor(8, 1); //posiciona el cursor
-      lcd.print(tminuto);  //Imprime mensaje
-    } else {
-      lcd.setCursor(6, 1); //posiciona el cursor
-      lcd.print(':'); //Imprime mensaje
-      lcd.setCursor(7, 1); //posiciona el cursor
-      lcd.print(tminuto);  //Imprime mensaje
-    }
-    if (thora < 10) { //comprueba el valor
-      lcd.setCursor(4, 1); //posiciona el cursor
-      lcd.print('0'); //Imprime mensaje
-      lcd.setCursor(5, 1); //posiciona el cursor
-      lcd.print(thora);  //Imprime mensaje
-    } else {
-      lcd.setCursor(4, 1); //posiciona el cursor
-      lcd.print(thora);  //Imprime mensaje
-    }
+tsegundo++;
+Serial.print("Temporizador: ");
+Serial.println(tsegundo);
 }
-
-
-
 
 void reloj () {
   if (segundo < 59) {
@@ -520,10 +415,3 @@ void reloj () {
     }
   }
 }
-
-void impresion(){
-  
-  
-  
-  
-  }
