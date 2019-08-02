@@ -46,16 +46,17 @@ Keypad customKeypad = Keypad( makeKeymap(teclado), rowPins, colPins, filas, colu
 
 int hora, minuto, segundo;  //variables reloj
 int tsegundo;  //variables temporizador
-int ahora, aminuto; //variables alarma
+int reghor, regmin; //variables alarma
 int opcion, presion = 5, contpass = 0;
 int aestado, passestado, on;
 int verpass[5];  //variable ingreso de contrasena
 int noche[4];
 int ntime;
-int nkey = 5;
+int nkey1 = 14,nkey2=19,nkey3=24,nkey4=29;
 int light, horario,alight;
-String msg1,msg2,msg3,msg4;
 int intentos=3;
+int s1,s2,s3,s4;
+int usuario,select;
 void setup() {
   Serial.begin(9600);
   lcd.begin(16, 2);
@@ -124,9 +125,9 @@ void setup() {
   segundo = EEPROM.read(0);
   minuto = EEPROM.read(1);
   hora = EEPROM.read(2);
-  //SENSORES
-  aminuto = EEPROM.read(3);
-  ahora = EEPROM.read(4);
+  //REGISTRO ALARMA
+  regmin = EEPROM.read(3);
+  reghor = EEPROM.read(4);
   //Estado de la alarma
   aestado = EEPROM.read(5);
   //Estado Luces
@@ -135,7 +136,6 @@ void setup() {
   Timer1.initialize(1000000);
   Timer1.attachInterrupt(reloj);
   MsTimer2::set(1000,temporizador);
-
 }
 
 void loop() {
@@ -182,6 +182,7 @@ void loop() {
         contpass = 0;
         presion = 5;
         if(aestado==1){
+        
         MsTimer2::start();
         }
         opcion=0;
@@ -199,6 +200,7 @@ void loop() {
         presion = 5;
         if(aestado==1){
         MsTimer2::start();
+        
         }
         opcion=0;
       }
@@ -222,6 +224,12 @@ void loop() {
         Serial.println(intentos);
         contpass = 0;
         presion = 5;
+        
+  if(intentos==0){
+    Serial.println("SISTEMA BLOQUEADO");
+    Serial.println("INGRESE CONTRASEÑA MASTER");
+    opcion=5;
+    }
         }     
     }
   }
@@ -232,9 +240,6 @@ if(tsegundo==20){
   EEPROM.update(9,1);
   }
 
-  if(intentos==0){
-    opcion=5;
-    }
 
   if (opcion == 5) {
       
@@ -260,9 +265,8 @@ if(tsegundo==20){
         delay(400);
         contpass = 0;
         presion = 5;
-        passestado = 1;
-        lcd.clear();
-        opcion=6;
+        intentos=3;
+        opcion=0;
       } else {
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -270,37 +274,201 @@ if(tsegundo==20){
         Serial.println("MASTER INCORRECTO");
         contpass = 0;
         presion = 5;
-        passestado = 2;
       }
     }
   }
-
-  if (passestado == 1) {
-        lcd.setCursor(0,0);
-        lcd.print("SELECT USER");
+/////////////////////////////Cambio Contrasena///////////////////////////////
+if (opcion == 3) { 
     if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
         customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
-      nkey++;
       customKey = customKey - 48;
-      EEPROM.update(nkey, customKey);
+      verpass[contpass] = customKey; //almacena el dato ingresado en cada posicion
+      contpass++; //aumenta contador
       presion++;
       lcd.setCursor(presion, 1);
       lcd.print('*');
       Serial.println(customKey);
     }
+
+    if (contpass == 5) {
+      if (verpass[0] == EEPROM.read(10) && verpass[1] == EEPROM.read(11) &&
+          verpass[2] == EEPROM.read(12) && verpass[3] == EEPROM.read(13)&&
+          verpass[4] == EEPROM.read(14)) {
+        //lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Correcto        ");
+        Serial.println("MASTER CORRECTO");
+        Serial.println("Seleccione usuario y password");
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("SELECT USER PASS");
+        delay(400);
+        contpass = 0;
+        presion = 5;
+        opcion=4;
+        passestado=1;
+      } else {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Incorrecto      ");
+        Serial.println("MASTER INCORRECTO");
+        contpass = 0;
+        presion = 5;
+      }
+    }
   }
+
+  if(opcion==6){
+    if(usuario==1&&select==1){
+    if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
+        customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
+      nkey1++;
+      Serial.println(nkey1);
+      customKey = customKey - 48;
+      EEPROM.update(nkey1, customKey);
+      presion++;
+      lcd.setCursor(presion, 1);
+      lcd.print('*');
+      Serial.println(customKey);
+    }
+    if (nkey1 ==19 ) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      delay(400);
+      lcd.print("PASS CHANGED");
+      passestado = 0;
+      presion=5;
+      nkey1=14;
+      opcion = 0;
+    }
+      }
+    if(usuario==1&&select==2){
+    if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
+        customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
+      nkey2++;
+      Serial.println(nkey2);
+      customKey = customKey - 48;
+      EEPROM.update(nkey2, customKey);
+      presion++;
+      lcd.setCursor(presion, 1);
+      lcd.print('*');
+      Serial.println(customKey);
+    }
+    if (nkey2 ==24 ) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      delay(400);
+      lcd.print("PASS CHANGED");
+      passestado = 0;
+      presion=5;
+      nkey2=19;
+      opcion = 0;
+    }
+      }
+    if(usuario==2&&select==1){
+    if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
+        customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
+      nkey3++;
+      Serial.println(nkey3);
+      customKey = customKey - 48;
+      EEPROM.update(nkey3, customKey);
+      presion++;
+      lcd.setCursor(presion, 1);
+      lcd.print('*');
+      Serial.println(customKey);
+    }
+    if (nkey3==29 ) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      delay(400);
+      lcd.print("PASS CHANGED");
+      passestado = 0;
+      presion=5;
+      nkey3=24;
+      opcion = 0;
+    }
+      }
+    if(usuario==2&&select==2){
+    if (customKey == '0' || customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' ||
+        customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9') {
+      nkey4++;
+      Serial.println(nkey4);
+      customKey = customKey - 48;
+      EEPROM.update(nkey4, customKey);
+      presion++;
+      lcd.setCursor(presion, 1);
+      lcd.print('*');
+      Serial.println(customKey);
+    }
+    if (nkey4 ==34 ) {
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      delay(400);
+      lcd.print("PASS CHANGED");
+      passestado = 0;
+      presion=5;
+      nkey4=29;
+      opcion = 0;
+    }
+      }
+    
+    }
 
   //////////////////////////Sistema de Seguridad///////////////////////////////
   if (EEPROM.read(5)==1) {
     if (digitalRead(46) == HIGH || digitalRead(45) == HIGH || digitalRead(44) == HIGH || digitalRead(43) == HIGH) {
-      digitalWrite(51, HIGH);
+      digitalWrite(51, HIGH);//Activa Sirena
+        EEPROM.update(3,minuto);  //registro de activacion
+        EEPROM.update(4,hora);  //registro de activacion
+        Serial.println("La alarma se activo a las:");
+        Serial.print(EEPROM.read(4));
+        Serial.print(":");
+        Serial.println(EEPROM.read(3));
     }
   } else {
     digitalWrite(51, LOW);
   }
+
+
+if(EEPROM.read(5)==0){
+    if(minuto%2==0&&segundo==1){
+      
+       if (digitalRead(46) == HIGH){
+        EEPROM.update(41,1);
+        Serial.println("Sensor 1: Activado");
+        }else{
+          EEPROM.update(41,0);
+          Serial.println("Sensor 1: Desactivado");
+          }
+       if(digitalRead(45) == HIGH){
+        EEPROM.update(42,1);
+        Serial.println("Sensor 2: Activado");
+        }else{
+          EEPROM.update(42,0);
+          Serial.println("Sensor 2: Desactivado");
+          } 
+       if(digitalRead(44) == HIGH){
+        EEPROM.update(43,1);   
+        Serial.println("Sensor 3: Activado");
+        }else{
+          EEPROM.update(43,0);
+          Serial.println("Sensor 3: Desactivado");
+          } 
+       if(digitalRead(43) == HIGH) {
+        EEPROM.update(44,1);
+        Serial.println("Sensor 4: Activado");
+        }else{
+          EEPROM.update(44,0);
+          Serial.println("Sensor 4: Desactivado");
+          }
+      
+      }
+    
+    
+    }
   //////////////////////////Sistema de luces///////////////////////////////////
   if(EEPROM.read(9)==1){
-  if (EEPROM.read(1) == 30 && EEPROM.read(2) == 18) {
+  if (EEPROM.read(1) == 0 && EEPROM.read(2) == 1) {//minuto hora
 
     digitalWrite(50,HIGH); 
     digitalWrite(49,HIGH);
@@ -323,7 +491,9 @@ if(tsegundo==20){
 }
 
 void menu () {
+
   switch (customKey) {
+
     case 65:
       lcd.clear();
       lcd.setCursor(0, 0);
@@ -340,7 +510,49 @@ void menu () {
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("CHANGE PASSWORDS");
+      Serial.println("Ingrese Contrasena Master");
+      opcion=3;
       break;
+    case 68:
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("ENTER NEW PASS");
+    if(opcion==4){
+    passestado=0;
+    opcion=6;
+    }
+      break;
+    case 70:
+    if(passestado==1){
+    if(usuario<2){
+      usuario++;
+    }else{
+      usuario=1;
+      }
+      Serial.print("usuario: ");
+      Serial.println(usuario);
+      lcd.setCursor(0, 1);
+      lcd.print("USER ");
+      lcd.setCursor(6, 1);
+      lcd.print(usuario);
+    }
+      break;
+    case 71:
+    if(passestado==1){
+    if(select<2){
+      select++;
+    }else{
+      select=1;
+      }
+      Serial.print("select: ");
+      Serial.println(select);
+      lcd.setCursor(9, 1);
+      lcd.print("PASS ");
+      lcd.setCursor(15, 1);
+      lcd.print(select);
+    }
+      break;
+
   } 
 }
 
@@ -414,4 +626,5 @@ void reloj () {
       lcd.print(hora);  //Imprime mensaje
     }
   }
+  
 }
