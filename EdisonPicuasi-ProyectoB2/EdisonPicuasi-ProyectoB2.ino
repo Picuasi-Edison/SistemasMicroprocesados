@@ -39,8 +39,8 @@ char teclado[filas][columnas] = {
   {'7', '8', '9', 'C'},
   {'F', '0', 'G', 'D'}
 };
-byte rowPins[filas] = {29, 28, 27, 26}; //asignamos los pines para las filas
-byte colPins[columnas] = {25, 24, 23, 22}; //asignamos los pines para las comunas
+byte rowPins[filas] = {30,29, 28, 27}; //asignamos los pines para las filas
+byte colPins[columnas] = {26,25, 24, 23}; //asignamos los pines para las comunas
 
 Keypad customKeypad = Keypad( makeKeymap(teclado), rowPins, colPins, filas, columnas);
 
@@ -69,17 +69,18 @@ void setup() {
   pinMode(45, INPUT); //sensor 2
   pinMode(44, INPUT); //sensor 3
   pinMode(43, INPUT); //sensor 4
+  pinMode(42, OUTPUT); //alarma
   pinMode(wakeUpPin,INPUT_PULLUP);
 /*
     for(int i=0;i<40;i++){
     EEPROM.write(i,0);
     }
-*/  
+*/
 
   //Reloj almacenada en EEPROM
 
-    //EEPROM.write(1,50);  //minuto
-    //EEPROM.write(2,11);  //hora
+    //EEPROM.write(1,10);  //minuto
+    //EEPROM.write(2,22);  //hora
 
   //Alarma del sistema de luces almacenada en EEPROM
 
@@ -118,8 +119,8 @@ void setup() {
     EEPROM.write(32,4);  //password
     EEPROM.write(33,3);  //password
     EEPROM.write(34,1);  //password
-*/
- 
+    
+ */
   //Dato almacenado estado de alarma
   //EEPROM.write(5,0);  //password
   //RELOJ
@@ -167,11 +168,17 @@ void loop() {
         EEPROM.update(5, aestado);
         Serial.print("alarma: ");
         Serial.println(aestado);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("CORRECTO");
         contpass = 0;
         presion = 5;
         if(aestado==1){
         MsTimer2::start();
-        }
+        }else{
+          EEPROM.update(9,0);
+          
+          }
         opcion=0;
       }
 //USERONE2
@@ -183,12 +190,19 @@ void loop() {
         EEPROM.update(5, aestado);
         Serial.print("alarma: ");
         Serial.println(aestado);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("CORRECTO");
         contpass = 0;
         presion = 5;
         if(aestado==1){
-        
+        digitalWrite(42,HIGH);
         MsTimer2::start();
-        }
+        }else{
+          digitalWrite(42,LOW);
+          EEPROM.update(9,0);
+          
+          }
         opcion=0;
       }
 //USERTWO1
@@ -200,12 +214,18 @@ void loop() {
         EEPROM.update(5, aestado);
         Serial.print("alarma: ");
         Serial.println(aestado);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("CORRECTO");
         contpass = 0;
         presion = 5;
         if(aestado==1){
         MsTimer2::start();
-        
-        }
+        digitalWrite(42,HIGH);
+        }else{
+          EEPROM.update(9,0);
+          digitalWrite(42,LOW);
+          }
         opcion=0;
       }
 //USERTWO2
@@ -217,15 +237,25 @@ void loop() {
         EEPROM.update(5, aestado);
         Serial.print("alarma: ");
         Serial.println(aestado);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("CORRECTO");
         contpass = 0;
         presion = 5;
         if(aestado==1){
         MsTimer2::start();
-        }
+        digitalWrite(42,HIGH);
+        }else{
+          EEPROM.update(9,0);
+          digitalWrite(42,LOW);
+          }
         opcion=0;
       }else{
         intentos=intentos-1;
         Serial.println(intentos);
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("INCORRECTO");
         contpass = 0;
         presion = 5;
         
@@ -435,7 +465,7 @@ if (opcion == 3) {
 
 
 if(EEPROM.read(5)==0){
-    if(minuto%2==0&&segundo==1){
+    //if(minuto%2==0&&segundo==1){
       
        if (digitalRead(46) == HIGH){
         EEPROM.update(41,1);
@@ -466,21 +496,24 @@ if(EEPROM.read(5)==0){
           Serial.println("Sensor 4: Desactivado");
           }
       
-      }
+      //}
     
     
     }
   //////////////////////////Sistema de luces///////////////////////////////////
   if(EEPROM.read(9)==1){
-  if (EEPROM.read(1) == 0 && EEPROM.read(2) == 1) {//minuto hora
-
-    digitalWrite(50,HIGH); 
-    digitalWrite(49,HIGH);
-    digitalWrite(48,HIGH); 
-    digitalWrite(47,HIGH);
+  if (EEPROM.read(1) == 33 && EEPROM.read(2) == 22) {//minuto hora
+    int aleatorio;
+    if(segundo%2==0){
+    aleatorio=random(47,51);
+    delay(1000);
+    digitalWrite(aleatorio,HIGH);
+    delay(1000);
+    
+    }
     }
 
-  if(EEPROM.read(1)==0&&EEPROM.read(2)==0){
+  if(EEPROM.read(1)==35&&EEPROM.read(2)==22){
     digitalWrite(50,LOW);
     digitalWrite(49,LOW);
     digitalWrite(48,LOW);
@@ -499,7 +532,7 @@ void menu () {
   switch (customKey) {
 
     case 65:
-
+      opcion=0;
       break;
     case 66:
       lcd.clear();
@@ -633,8 +666,10 @@ void reloj () {
 void dormir(){
   on=1-on;
   if(on==0){
+  lcd.noDisplay();
   LowPower.powerDown(SLEEP_FOREVER,ADC_OFF,BOD_OFF);
   }else{
+  lcd.display();
   detachInterrupt(0);
   }
   }
