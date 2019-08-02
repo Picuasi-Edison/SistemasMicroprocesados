@@ -24,14 +24,14 @@ hasta ingresar contraseña máster. El ingreso de contraseñas se lo realiza por
 #include <MsTimer2.h>
 #include <EEPROM.h>
 #include <Keypad.h>
-
+#include <LowPower.h>
 LiquidCrystal lcd(36, 35, 34, 33, 32, 31); //declara y asigna los pines del lcd
 
 const byte filas = 4; //4 filas
 const byte columnas = 4; //4 columnas
 String cifra;
 int customKey;
-
+const int wakeUpPin=21;
 //crear la variable y asignar los caracteres de ingreso
 char teclado[filas][columnas] = {
   {'1', '2', '3', 'A'},
@@ -69,6 +69,7 @@ void setup() {
   pinMode(45, INPUT); //sensor 2
   pinMode(44, INPUT); //sensor 3
   pinMode(43, INPUT); //sensor 4
+  pinMode(wakeUpPin,INPUT_PULLUP);
 /*
     for(int i=0;i<40;i++){
     EEPROM.write(i,0);
@@ -136,10 +137,13 @@ void setup() {
   Timer1.initialize(1000000);
   Timer1.attachInterrupt(reloj);
   MsTimer2::set(1000,temporizador);
+    attachInterrupt(digitalPinToInterrupt(21),dormir,FALLING);
 }
 
 void loop() {
   customKey = customKeypad.getKey();  //almacena el dato ingresado por teclado
+
+
   menu();
   /////////////////////////////////Validar////////////////////////////////////////////
   if (opcion == 2) {
@@ -495,10 +499,7 @@ void menu () {
   switch (customKey) {
 
     case 65:
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("SAVE BATTERY");
-      opcion = 1;
+
       break;
     case 66:
       lcd.clear();
@@ -628,3 +629,12 @@ void reloj () {
   }
   
 }
+
+void dormir(){
+  on=1-on;
+  if(on==0){
+  LowPower.powerDown(SLEEP_FOREVER,ADC_OFF,BOD_OFF);
+  }else{
+  detachInterrupt(0);
+  }
+  }
